@@ -1,4 +1,3 @@
-#!/bin/bash
 #
 # Copyright (C) 2017 The LineageOS Project
 #
@@ -15,11 +14,18 @@
 # limitations under the License.
 #
 
-set -e
+LOCAL_PATH := device/lge/h870
 
-export DEVICE=h870
-export DEVICE_COMMON=g6-common
-export PLATFORM_COMMON=msm8996-common
-export VENDOR=lge
+# Get non-open-source specific aspects
+$(call inherit-product, vendor/lge/h870/h870-vendor.mk)
 
-./../$PLATFORM_COMMON/extract-files.sh $@
+# common g6
+$(call inherit-product, device/lge/g6-common/g6.mk)
+
+# Sensors
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/sensors/sensor_def_lucye_global_com.conf:system/etc/sensors/sensor_def_variable.conf
+
+# WiFi Calibration
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/wifi/bcmdhd.cal:system/etc/wifi/bcmdhd.cal
